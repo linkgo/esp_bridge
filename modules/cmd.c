@@ -173,15 +173,15 @@ protoCompletedCb()
 
 	while(argc--){
 		len = *((uint16_t*)data_ptr);
-		INFO("Arg[%d], len: %d:", argn++, len);
+		INFO("Arg[%d](len %d): ", argn++, len);
 		crc = crc16_data(data_ptr, 2, crc);
 		data_ptr += 2;
 		crc = crc16_data(data_ptr, len, crc);
 		while(len --){
-		  INFO("%02X-", *data_ptr);
+		  INFO("%02X ", *data_ptr);
 		  data_ptr ++;
 		}
-		INFO("\r\n\r\n");
+		INFO("\r\n");
 	}
 	resp_crc =  *(uint16_t*)data_ptr;
 	INFO("Read CRC: %04X, calculated crc: %04X\r\n", resp_crc, crc);
