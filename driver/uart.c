@@ -227,7 +227,7 @@ uart0_rx_intr_handler(void *para)
 		{
 			WRITE_PERI_REG(0X60000914, 0x73); //WTD
 			RcvChar = READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
-			CMD_Input(RcvChar);
+			neurite_cmd_input(RcvChar);
 		}
 
 	}
@@ -238,7 +238,7 @@ uart0_rx_intr_handler(void *para)
 		{
 			WRITE_PERI_REG(0X60000914, 0x73); //WTD
 			RcvChar = READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
-			CMD_Input(RcvChar);
+			neurite_cmd_input(RcvChar);
 		}
 
 	}

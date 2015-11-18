@@ -1,18 +1,16 @@
-esp_bridge
-================
+# Neurite
+Linkgo Neurite is a WiFi bridge that simply works with the cloud.
 
-This is source code for esp8266 support bridge for arduino or any MCU using SLIP protocol via Serial port. 
-###Library for arduino: [https://github.com/tuanpmt/espduino](https://github.com/tuanpmt/espduino)
+## Typical Diagram
 
-If you want using only ESP8266, you can find the **Native MQTT client** library for ESP8266 work well here: 
-[https://github.com/tuanpmt/esp_mqtt](https://github.com/tuanpmt/esp_mqtt)
+Neuron - Neurite <-> Cloud <-> Neurite - Neuron
+(MCU) (WiFi bridge)         (WiFi bridge) (MCU)
 
-Warning
-==============
-This project **only execute commands from other MCU** via Serial port (like arduino).
+## Brief
+This Project is based on esp_bridge: https://github.com/tuanpmt/esp_bridge
+So it benefits from esp_bridge features:
 
-Features
-========
+### Features
 - Rock Solid wifi network client for Arduino (of course need to test more and resolve more issues :v)
 - **More reliable** than AT COMMAND library (Personal comments)
 - **Firmware applications written on ESP8266 can be read out completely. For security applications, sometimes you should use it as a Wifi client (network client) and other MCU with Readout protection.**
@@ -30,39 +28,7 @@ Features
     + Support SSL
 - WIFI module:
 
-
-Installations
-========
-
-You can found here for instructions: [https://github.com/tuanpmt/espduino](https://github.com/tuanpmt/espduino)
-
-Compile
-=======
-
-```bash
-git clone --recursive https://github.com/tuanpmt/esp_bridge
-cd esp_bridge
-make all
-```
-
-Limited
-========
-It is not completely tested. Welcome your submitting issues.
-
-Contributing
-==========
-There is very much needed module for this library, welcome your pull request:
-
-Donations
-==================
-Invite me to a coffee
-[![Donate](https://www.paypalobjects.com/en_US/GB/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JR9RVLFC4GE6J)
-
-Authors:
-=====
-[Tuan PM](https://twitter.com/tuanpmt)
-
-
+### Original Licence
 **LICENSE - "MIT License"**
 
 Copyright (c) 2014-2015 Tuan PM, [https://twitter.com/tuanpmt](https://twitter.com/tuanpmt)
