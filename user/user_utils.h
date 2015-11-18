@@ -79,14 +79,13 @@
 #define ASSERT_ALL	1
 #define ASSERT_LEVEL	ASSERT_ALL
 
-inline void _os_assert_fail(const char *p_file, int line, const char *p_exp);
-
-#if defined(OUSIA_DEBUG_ASSERT) && (ASSERT_LEVEL >= ASSERT_ALL)
+#if (ASSERT_LEVEL >= ASSERT_ALL)
 #define _OS_ASSERT(exp) \
 	do { \
 		if (exp) { \
 		} else { \
-			_os_assert_fail(__FILE__, __LINE__, #exp); \
+			log_fatal("assert failed: " #exp " at %s %d!\n", __FILE__, __LINE__); \
+			while (1); \
 		} \
 	} while (0)
 #else
