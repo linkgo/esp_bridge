@@ -5,27 +5,7 @@
 #include "driver/uart.h"
 #include "user_utils.h"
 
-const char *WIFI_STATUS_STR[] = {
-	"IDLE",
-	"CONNECTING",
-	"WRONG_PASSWORD",
-	"NO_AP_FOUND",
-	"CONNECT_FAIL",
-	"GOT_IP"
-};
-
-void wifi_cb(uint8_t status)
-{
-	log_info("wifi status: %d(%s)\n", status, WIFI_STATUS_STR[status]);
-}
-
-void ICACHE_FLASH_ATTR neurite_init(void)
-{
-	log_info("in\n");
-	WIFI_Connect("NETGEAR68", "basicbox565", wifi_cb);
-	neurite_cmd_init();
-	log_info("out\n");
-}
+void ICACHE_FLASH_ATTR neurite_init(void);
 
 void ICACHE_FLASH_ATTR user_init(void)
 {

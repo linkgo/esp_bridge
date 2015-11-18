@@ -27,6 +27,9 @@
 #ifndef __SYS_DEBUG_H__
 #define __SYS_DEBUG_H__
 
+/*
+ * Log
+ */
 #define LOG_ALL		0
 #define LOG_DEBUG	1
 #define LOG_INFO	2
@@ -69,7 +72,9 @@
 		} \
 	} while (0)
 
-
+/*
+ * Assertion
+ */
 #define ASSERT_NONE	0
 #define ASSERT_ALL	1
 #define ASSERT_LEVEL	ASSERT_ALL
@@ -89,5 +94,10 @@ inline void _os_assert_fail(const char *p_file, int line, const char *p_exp);
 #endif
 
 #define dbg_assert(exp)			_OS_ASSERT(exp)
+
+/*
+ * Other Utils
+ */
+#define bzero(s,n)	(void)memset(s,0,n)
 
 #endif /* __SYS_DEBUG_H__ */
