@@ -138,6 +138,8 @@ uart1_write_char(char c)
   }
   else if (c == '\r')
   {
+    uart_tx_one_char(UART1, '\r');
+    uart_tx_one_char(UART1, '\n');
   }
   else
   {
@@ -155,6 +157,8 @@ uart0_write_char(char c)
   }
   else if (c == '\r')
   {
+    uart_tx_one_char(UART0, '\r');
+    uart_tx_one_char(UART0, '\n');
   }
   else
   {
@@ -273,7 +277,11 @@ uart_init(UartBautRate uart0_br, UartBautRate uart1_br)
   ETS_UART_INTR_ENABLE();
 
   // install uart1 putc callback
+#ifdef NEURITE_RELEASE
+  os_install_putc1((void *)uart1_write_char);
+#else
   os_install_putc1((void *)uart0_write_char);
+#endif
 }
 
 void ICACHE_FLASH_ATTR

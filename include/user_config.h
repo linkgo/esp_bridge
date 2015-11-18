@@ -12,7 +12,7 @@
 #define MQTT_BUF_SIZE	1024
 #define MQTT_KEEPALIVE	120
 
-#define MQTT_CLIENT_ID	"neurite_%08x"
+#define MQTT_CLIENT_ID	"neurite-%08x"
 #define MQTT_USER	"neurite-tester"
 #define MQTT_PASS	"neurite"
 

@@ -141,6 +141,7 @@ void ICACHE_FLASH_ATTR neurite_cmd_init(struct neurite_data_s *nd)
 			NEURITE_CMD_TASK_QUEUE_SIZE);
 
 	system_os_post(NEURITE_CMD_TASK_PRIO, 1, (os_param_t)nd);
+	uart0_sendStr("linkgo.io\n\r");
 }
 
 const char *WIFI_STATUS_STR[] = {
@@ -194,6 +195,7 @@ void mqtt_data_cb(uint32_t *args, const char *topic, uint32_t topic_len, const c
 {
 	char *topic_buf = (char *)os_zalloc(topic_len+1);
 	char *data_buf = (char *)os_zalloc(data_len+1);
+	uint32_t i;
 
 	MQTT_Client* client = (MQTT_Client*)args;
 
@@ -203,8 +205,12 @@ void mqtt_data_cb(uint32_t *args, const char *topic, uint32_t topic_len, const c
 	os_memcpy(data_buf, data, data_len);
 	data_buf[data_len] = 0;
 
+	uart0_sendStr(data_buf);
+	uart0_write_char('\n');
+
 	log_dbg("> topic (%d): %s\n", topic_len, topic_buf);
 	log_dbg("> data (%d): %s\n", data_len, data_buf);
+
 	os_free(topic_buf);
 	os_free(data_buf);
 }
@@ -223,6 +229,7 @@ void ICACHE_FLASH_ATTR neurite_mqtt_connect(struct neurite_data_s *nd)
 
 void ICACHE_FLASH_ATTR neurite_child_worker(struct neurite_data_s *nd)
 {
+#if 0
 	static uint32_t ms = 0;
 	char payload[64];
 
@@ -234,7 +241,7 @@ void ICACHE_FLASH_ATTR neurite_child_worker(struct neurite_data_s *nd)
 		os_sprintf(payload, "my time is: %d ms", system_get_time_ms());
 		MQTT_Publish(&nd->mc, nd->nmcfg.topic_to, payload, strlen(payload), 1, 0);
 	}
-
+#endif
 	return;
 }
 
@@ -312,9 +319,9 @@ void ICACHE_FLASH_ATTR neurite_init(void)
 
 	/* TODO these items need to be configured at runtime */
 	bzero(&nd->nmcfg, sizeof(struct neurite_mqtt_cfg_s));
-	os_sprintf(nd->nmcfg.uid, "neurite_%08x", system_get_chip_id());
+	os_sprintf(nd->nmcfg.uid, "neurite-%08x", system_get_chip_id());
 	os_sprintf(nd->nmcfg.topic_to, "/neuro/%s/to", nd->nmcfg.uid);
-	os_sprintf(nd->nmcfg.topic_from, "/neuro/%s/to", nd->nmcfg.uid);
+	os_sprintf(nd->nmcfg.topic_from, "/neuro/%s/from", nd->nmcfg.uid);
 //	os_sprintf(nd->cfg->sta_ssid, "%s", STA_SSID);
 //	os_sprintf(nd->cfg->sta_pwd, "%s", STA_PASS);
 	log_dbg("chip id: %08x\n", system_get_chip_id());
