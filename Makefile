@@ -56,6 +56,7 @@ ifeq ($(OS),Windows_NT)
 		NM = xtensa-lx106-elf-nm
 		CPP = xtensa-lx106-elf-cpp
 		OBJCOPY = xtensa-lx106-elf-objcopy
+		OBJDUMP = xtensa-lx106-elf-objdump
 	endif
 	
 		ESPPORT ?= com1
@@ -79,6 +80,7 @@ else
 	NM = xtensa-lx106-elf-nm
 	CPP = xtensa-lx106-elf-cpp
 	OBJCOPY = xtensa-lx106-elf-objcopy
+	OBJDUMP = xtensa-lx106-elf-objdump
     UNAME_S := $(shell uname -s)
 
     ifeq ($(UNAME_S),Linux)
@@ -146,6 +148,7 @@ OBJ		:= $(patsubst %.c,$(BUILD_BASE)/%.o,$(SRC))
 LIBS		:= $(addprefix -l,$(LIBS))
 APP_AR		:= $(addprefix $(BUILD_BASE)/,$(TARGET)_app.a)
 TARGET_OUT	:= $(addprefix $(BUILD_BASE)/,$(TARGET).out)
+TARGET_LSS	:= $(addprefix $(BUILD_BASE)/,$(TARGET).lss)
 
 LD_SCRIPT	:= $(addprefix -T$(SDK_BASE)/$(SDK_LDDIR)/,$(LD_SCRIPT))
 
@@ -175,7 +178,7 @@ endef
 
 .PHONY: all checkdirs clean
 
-all: checkdirs $(TARGET_OUT) $(FW_FILE_1) $(FW_FILE_2)
+all: checkdirs $(TARGET_LSS) $(TARGET_OUT) $(FW_FILE_1) $(FW_FILE_2)
 
 $(FW_FILE_1): $(TARGET_OUT)
 	$(vecho) "FW $@"
@@ -184,6 +187,9 @@ $(FW_FILE_1): $(TARGET_OUT)
 $(FW_FILE_2): $(TARGET_OUT)
 	$(vecho) "FW $@"
 	$(ESPTOOL) elf2image $< -o $(FW_BASE)/
+
+$(TARGET_LSS): $(TARGET_OUT)
+	$(Q) $(OBJDUMP) -d -x $< > $@
 
 $(TARGET_OUT): $(APP_AR)
 	$(vecho) "LD $@"
