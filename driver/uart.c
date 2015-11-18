@@ -14,7 +14,6 @@
 #include "driver/uart.h"
 #include "osapi.h"
 #include "driver/uart_register.h"
-#include "cmd.h"
 
 
 // UartDev is defined and initialized in rom code.

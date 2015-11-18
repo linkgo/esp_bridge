@@ -102,7 +102,7 @@ endif
 
 
 # which modules (subdirectories) of the project to include in compiling
-MODULES		= driver modules/mqtt/mqtt user modules
+MODULES		= driver modules/mqtt/mqtt modules/mqtt/modules user
 EXTRA_INCDIR    = include $(SDK_BASE)/../include
 
 # libraries used in this project, mainly provided by the SDK

@@ -2,7 +2,6 @@
 #include "osapi.h"
 #include "user_interface.h"
 #include "mem.h"
-#include "cmd.h"
 #include "ringbuf.h"
 #include "driver/uart.h"
 #include "user_utils.h"
@@ -17,7 +16,7 @@ uint8_t cmd_rx_buf[256];
 void ICACHE_FLASH_ATTR neurite_cmd_input(uint8_t data)
 {
 	RINGBUF_Put(&cmd_rx_rb, data);
-	system_os_post(CMD_TASK_PRIO, 0, 0);
+	system_os_post(NEURITE_CMD_TASK_PRIO, 0, 0);
 }
 
 static void ICACHE_FLASH_ATTR neurite_cmd_task(os_event_t *events)
