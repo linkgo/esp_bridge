@@ -7,7 +7,7 @@ Neuron - Neurite <-> Cloud <-> Neurite - Neuron
 (MCU) (WiFi bridge)         (WiFi bridge) (MCU)
 ```
 ## Brief
-This Project is based on esp_bridge: https://github.com/tuanpmt/esp_bridge
+This Project is based on esp_bridge: https://github.com/tuanpmt/esp_bridge  
 So it benefits from esp_bridge features:
 
 ### Features

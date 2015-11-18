@@ -4,10 +4,13 @@
 #include "mem.h"
 #include "cmd.h"
 #include "driver/uart.h"
+#include "user_utils.h"
 
 void ICACHE_FLASH_ATTR neurite_init(void)
 {
+	log_info("in\n");
 	neurite_cmd_init();
+	log_info("out\n");
 }
 
 void ICACHE_FLASH_ATTR user_init(void)

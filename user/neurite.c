@@ -4,8 +4,8 @@
 #include "mem.h"
 #include "cmd.h"
 #include "ringbuf.h"
-#include "proto.h"
 #include "driver/uart.h"
+#include "user_utils.h"
 
 #define NEURITE_CMD_TASK_QUEUE_SIZE	1
 #define NEURITE_CMD_TASK_PRIO		1
@@ -24,9 +24,7 @@ static void ICACHE_FLASH_ATTR neurite_cmd_task(os_event_t *events)
 {
 	uint8_t c;
 	while(RINGBUF_Get(&cmd_rx_rb, &c) == 0) {
-		uart0_sendStr("input: ");
-		uart0_write(c);
-		uart0_sendStr("\n\r");
+		log_info("input: %c\n", c);
 	}
 }
 
