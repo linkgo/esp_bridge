@@ -97,6 +97,5 @@
 /*
  * Other Utils
  */
-#define bzero(s,n)	(void)memset(s,0,n)
 
 #endif /* __SYS_DEBUG_H__ */

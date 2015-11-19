@@ -88,7 +88,7 @@ static void ICACHE_FLASH_ATTR cmd_completed_cb(struct cmd_parser_s *cp)
 		log_dbg("msg launch(len %d): %s\n", cp->data_len, cp->buf);
 		MQTT_Publish(&g_nd.mc, g_nd.nmcfg.topic_to, cp->buf, cp->data_len, 0, 0);
 	}
-	bzero(cp->buf, cp->buf_size);
+	os_bzero(cp->buf, cp->buf_size);
 	cp->data_len = 0;
 }
 
@@ -237,7 +237,7 @@ void ICACHE_FLASH_ATTR neurite_child_worker(struct neurite_data_s *nd)
 
 	if (system_get_time_ms() - ms > 2000) {
 		ms = system_get_time_ms();
-		bzero(payload, 64);
+		os_bzero(payload, 64);
 		os_sprintf(payload, "my time is: %d ms", system_get_time_ms());
 		MQTT_Publish(&nd->mc, nd->nmcfg.topic_to, payload, strlen(payload), 1, 0);
 	}
@@ -267,7 +267,13 @@ static void ICACHE_FLASH_ATTR neurite_worker_task(os_event_t *events)
 			update_worker_state(WORKER_ST_3);
 			neurite_cmd_init(nd);
 			MQTT_Subscribe(&nd->mc, nd->nmcfg.topic_from, 1);
-			MQTT_Publish(&nd->mc, nd->nmcfg.topic_to, "checkin", 7, 1, 0);
+
+			uint8_t *payload_buf = (uint8_t *)os_malloc(32);
+			dbg_assert(payload_buf);
+			os_sprintf(payload_buf, "checkin: %s", nd->nmcfg.uid);
+			MQTT_Publish(&nd->mc, nd->nmcfg.topic_to, payload_buf, strlen(payload_buf), 1, 0);
+			os_free(payload_buf);
+
 			break;
 		case WORKER_ST_3:
 			neurite_child_worker(nd);
@@ -307,21 +313,26 @@ void ICACHE_FLASH_ATTR neurite_init(void)
 
 	CFG_Load();
 
-	bzero(nd, sizeof(struct neurite_data_s));
+	os_bzero(nd, sizeof(struct neurite_data_s));
 	nd->cfg = &sysCfg;
 
-	bzero(&g_cp, sizeof(struct cmd_parser_s));
+	os_bzero(&g_cp, sizeof(struct cmd_parser_s));
 	nd->cp = &g_cp;
 	cmd_buf = (uint8_t *)os_malloc(NEURITE_CMD_BUF_SIZE);
 	dbg_assert(cmd_buf);
-	bzero(cmd_buf, NEURITE_CMD_BUF_SIZE);
+	os_bzero(cmd_buf, NEURITE_CMD_BUF_SIZE);
 	cmd_parser_init(nd->cp, cmd_completed_cb, cmd_buf, NEURITE_CMD_BUF_SIZE);
 
 	/* TODO these items need to be configured at runtime */
-	bzero(&nd->nmcfg, sizeof(struct neurite_mqtt_cfg_s));
+	os_bzero(&nd->nmcfg, sizeof(struct neurite_mqtt_cfg_s));
 	os_sprintf(nd->nmcfg.uid, "neurite-%08x", system_get_chip_id());
+#if 0
 	os_sprintf(nd->nmcfg.topic_to, "/neuro/%s/to", nd->nmcfg.uid);
-	os_sprintf(nd->nmcfg.topic_from, "/neuro/%s/from", nd->nmcfg.uid);
+	os_sprintf(nd->nmcfg.topic_from, "/neuro/%s/to", nd->nmcfg.uid);
+#else
+	os_sprintf(nd->nmcfg.topic_to, "/neuro/chatroom", nd->nmcfg.uid);
+	os_sprintf(nd->nmcfg.topic_from, "/neuro/chatroom", nd->nmcfg.uid);
+#endif
 //	os_sprintf(nd->cfg->sta_ssid, "%s", STA_SSID);
 //	os_sprintf(nd->cfg->sta_pwd, "%s", STA_PASS);
 	log_dbg("chip id: %08x\n", system_get_chip_id());
