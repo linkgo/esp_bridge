@@ -16,8 +16,8 @@
 #define MQTT_USER	"neurite-tester"
 #define MQTT_PASS	"neurite"
 
-#define STA_SSID	"NETGEAR68"
-#define STA_PASS	"basicbox565"
+#define STA_SSID	"NO-SSID"
+#define STA_PASS	"NO-PASS"
 #define STA_TYPE	AUTH_WPA2_PSK
 
 #define MQTT_RECONNECT_TIMEOUT	5
