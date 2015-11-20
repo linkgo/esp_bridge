@@ -333,8 +333,8 @@ void ICACHE_FLASH_ATTR neurite_init(void)
 	os_sprintf(nd->nmcfg.topic_to, "/neuro/chatroom", nd->nmcfg.uid);
 	os_sprintf(nd->nmcfg.topic_from, "/neuro/chatroom", nd->nmcfg.uid);
 #endif
-//	os_sprintf(nd->cfg->sta_ssid, "%s", STA_SSID);
-//	os_sprintf(nd->cfg->sta_pwd, "%s", STA_PASS);
+	os_sprintf(nd->cfg->sta_ssid, "%s", STA_SSID);
+	os_sprintf(nd->cfg->sta_pwd, "%s", STA_PASS);
 	log_dbg("chip id: %08x\n", system_get_chip_id());
 	log_dbg("uid: %s\n", nd->nmcfg.uid);
 	log_dbg("topic_to: %s\n", nd->nmcfg.topic_to);
@@ -345,7 +345,7 @@ void ICACHE_FLASH_ATTR neurite_init(void)
 	log_dbg("mqtt user: %s\n", nd->cfg->mqtt_user);
 	log_dbg("mqtt pass: %s\n", nd->cfg->mqtt_pass);
 
-//	CFG_Save();
+	CFG_Save();
 
 	neurite_worker_init(nd);
 
