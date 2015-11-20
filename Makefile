@@ -71,7 +71,7 @@ else
 # We are under other system, may be Linux. Assume using gcc.
 
 		ESPPORT ?= /dev/ttyUSB0
-		SDK_BASE	?= /esptools/esp-open-sdk/sdk
+		SDK_BASE	?= /opt/resources/espressif/esp_iot_sdk
 
 	CCFLAGS += -Os -ffunction-sections -fno-jump-tables
 	AR = xtensa-lx106-elf-ar
