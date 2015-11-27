@@ -124,6 +124,10 @@ static void ICACHE_FLASH_ATTR neurite_cmd_task(os_event_t *events)
 
 	dbg_assert(nd);
 
+	/* commands make sense only if connected */
+	if (!nd->mqtt_connected)
+		return;
+
 	while (RINGBUF_Get(&cmd_rx_rb, &c) == 0) {
 		os_printf("%c", c);
 		cmd_parse_byte(nd->cp, c);
@@ -176,6 +180,12 @@ void mqtt_connected_cb(uint32_t *args)
 	MQTT_Client *client = (MQTT_Client*)args;
 	log_dbg("connected\r\n");
 	g_nd.mqtt_connected = true;
+
+	/*
+	 * Each time we get here may be caused by a reconnect,
+	 * so let's launch a state updating.
+	 */
+	update_worker_state(WORKER_ST_2);
 }
 
 void mqtt_disconnected_cb(uint32_t *args)
@@ -258,22 +268,19 @@ static void ICACHE_FLASH_ATTR neurite_worker_task(os_event_t *events)
 		case WORKER_ST_1:
 			if (!nd->wifi_connected)
 				break;
-			update_worker_state(WORKER_ST_2);
 			neurite_mqtt_connect(nd);
+			update_worker_state(WORKER_ST_2);
 			break;
 		case WORKER_ST_2:
 			if (!nd->mqtt_connected)
 				break;
-			update_worker_state(WORKER_ST_3);
-			neurite_cmd_init(nd);
 			MQTT_Subscribe(&nd->mc, nd->nmcfg.topic_from, 1);
-
 			uint8_t *payload_buf = (uint8_t *)os_malloc(32);
 			dbg_assert(payload_buf);
 			os_sprintf(payload_buf, "checkin: %s", nd->nmcfg.uid);
 			MQTT_Publish(&nd->mc, nd->nmcfg.topic_to, payload_buf, strlen(payload_buf), 1, 0);
 			os_free(payload_buf);
-
+			update_worker_state(WORKER_ST_3);
 			break;
 		case WORKER_ST_3:
 			neurite_child_worker(nd);
@@ -348,6 +355,7 @@ void ICACHE_FLASH_ATTR neurite_init(void)
 	CFG_Save();
 
 	neurite_worker_init(nd);
+	neurite_cmd_init(nd);
 
 	log_dbg("out\n");
 }
